@@ -1,0 +1,206 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": "-- Grafana --",
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "target": {
+                    "limit": 100,
+                    "matchAny": false,
+                    "tags": [],
+                    "type": "dashboard"
+                },
+                "type": "dashboard"
+            }
+        ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": 27,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+        {
+            "datasource": null,
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 0
+            },
+            "id": 6,
+            "options": {
+                "content": "# Rquest Time Distribution\n# Metric Types general groups\n\nDevOps Monitoring Deep Dive (a cloudguru)",
+                "mode": "markdown"
+            },
+            "pluginVersion": "8.2.3",
+            "title": "Todos",
+            "type": "text"
+        },
+        {
+            "datasource": "Loki",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 0
+            },
+            "id": 2,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom"
+                },
+                "tooltip": {
+                    "mode": "single"
+                }
+            },
+            "targets": [
+                {
+                    "expr": "sum(rate(({job=\"jaegertns/app-jaeger\"})[10m])) / (sum(rate(({job=\"jaegertns/loadgen-jaeger\"})[10m])) / 100)",
+                    "refId": "A"
+                }
+            ],
+            "title": "Adhoc metrics from logs",
+            "type": "timeseries"
+        },
+        {
+            "cards": {
+                "cardPadding": null,
+                "cardRound": null
+            },
+            "color": {
+                "cardColor": "#b4ff00",
+                "colorScale": "sqrt",
+                "colorScheme": "interpolateGreens",
+                "exponent": 0.5,
+                "mode": "spectrum"
+            },
+            "dataFormat": "timeseries",
+            "datasource": null,
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 8
+            },
+            "heatmap": {},
+            "hideZeroBuckets": false,
+            "highlightCards": true,
+            "id": 4,
+            "legend": {
+                "show": false
+            },
+            "pluginVersion": "8.2.3",
+            "reverseYBuckets": false,
+            "targets": [
+                {
+                    "exemplar": true,
+                    "expr": "sum(rate(tns_request_message_bytes_bucket[30s]))",
+                    "format": "time_series",
+                    "interval": "100",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "Response Bytes Distribution",
+            "tooltip": {
+                "show": true,
+                "showHistogram": false
+            },
+            "type": "heatmap",
+            "xAxis": {
+                "show": true
+            },
+            "xBucketNumber": null,
+            "xBucketSize": null,
+            "yAxis": {
+                "decimals": null,
+                "format": "short",
+                "logBase": 1,
+                "max": null,
+                "min": null,
+                "show": true,
+                "splitFactor": null
+            },
+            "yBucketBound": "auto",
+            "yBucketNumber": null,
+            "yBucketSize": null
+        }
+    ],
+    "refresh": false,
+    "schemaVersion": 31,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+        "list": []
+    },
+    "time": {
+        "from": "2021-12-04T10:55:23.336Z",
+        "to": "2021-12-04T11:36:48.292Z"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Learning Dashboard",
+    "uid": "bFgsF72nz",
+    "version": 4
+}

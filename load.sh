@@ -1,1 +1,1 @@
-while true; do curl http://hello-observability:8080/hello; sleep 10s; done
+while true; do curl http://localhost:8080/hello; sleep 3s; done
