@@ -1,0 +1,25 @@
+#This service monitor will be translated into a scrape_config
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: loadgen-svc-monitor
+  labels:
+    release: monitoring #todo this is defined in the prometheus deployment
+spec:
+#  jobLabel: tns/loadgen #TODO this name is important, cause is what is also being logged for loki
+  selector:
+    matchLabels:
+      name: svc-monitor
+  namespaceSelector:
+    any: true
+#    matchNames:
+#      - default
+  endpoints:
+    - port: http-metrics-loadgen
+      path: /metrics
+      interval: 15s
+      relabelings:
+        - sourceLabels: [ job ]
+          targetLabel: job
+          replacement: tns/loadgen
+          action: replace

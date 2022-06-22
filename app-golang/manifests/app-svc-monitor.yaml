@@ -1,0 +1,34 @@
+#This service monitor will be translated into a scrape_config
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: app-svc-monitor2
+  labels:
+    release: monitoring #todo this is defined in the prometheus deployment
+spec:
+  jobLabel: tns/app #not doing much
+  targetLabels:
+    - custom_job_label
+  selector:
+    matchLabels:
+      name: svc-monitor
+  namespaceSelector:
+    any: true
+#    matchNames:
+#      - default
+  endpoints:
+    - port: http-metrics-app
+      path: /metrics
+      interval: 15s
+      relabelings:
+        - sourceLabels: [ job ]
+          targetLabel: job
+          replacement: tns/app
+          action: replace
+#      metricRelabelings:
+#      - sourceLabels: [ job ]
+#        targetLabel: custom_job_label
+##        regex: (.*)
+##        replacement: ${1}
+#        replacement: tns/app
+#        action: replace
