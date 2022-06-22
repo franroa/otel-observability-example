@@ -1,20 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export MINIKUBE_IN_STYLE=false
-MINIKUBE_PROFILE=observability-demo
-echo ">>>> Starting minikube with profile $MINIKUBE_PROFILE..."
+#export MINIKUBE_IN_STYLE=false
+#MINIKUBE_PROFILE=observability-demo
+#echo ">>>> Starting minikube with profile $MINIKUBE_PROFILE..."
+#
+#minikube start --profile $MINIKUBE_PROFILE
+#minikube profile $MINIKUBE_PROFILE
+#
+#echo ">>>> Building & pushing Spring Boot Demo App..."
+## sleep a bit as minikube's network might not be present immediately,
+## failing the build with curl
+#sleep 15
+#
+#eval "$(minikube -p $MINIKUBE_PROFILE docker-env)"
+#(cd spring-boot-app; docker build -q -t "spring-boot-app:latest" .)
 
-minikube start --profile $MINIKUBE_PROFILE
-minikube profile $MINIKUBE_PROFILE
-
-echo ">>>> Building & pushing Spring Boot Demo App..."
-# sleep a bit as minikube's network might not be present immediately,
-# failing the build with curl
-sleep 15
-
-eval "$(minikube -p $MINIKUBE_PROFILE docker-env)"
-(cd spring-boot-app; docker build -q -t "spring-boot-app:latest" .)
+kind create cluster
 
 helm_install() {
   local chart_name=$1

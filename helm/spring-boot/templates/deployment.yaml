@@ -12,13 +12,20 @@ spec:
       {{- include "app.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+#         sidecar.opentelemetry.io/inject: "true"
+        instrumentation.opentelemetry.io/inject-java: "true"
       labels:
+        app: spring-boot
         {{- include "app.labels" . | nindent 8 }}
     spec:
+      imagePullSecrets:
+      - name: fran
       containers:
         - name: {{ include "app.name" . }}
-          image: "spring-boot-app:latest"
-          imagePullPolicy: Never
+          image: "franroa/otelworkingexample:latest"
+#           image: "franroa/otelwithpack:latest"
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8080
@@ -45,10 +52,6 @@ spec:
               value: '8080'
             - name: MANAGEMENT_SERVER_PORT
               value: '8081'
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: http://tempo.tempo:4317
-            - name: OTEL_SERVICE_NAME
-              value: {{ include "app.name" . }}
             - name: KUBE_POD_NAME
               valueFrom:
                 fieldRef:

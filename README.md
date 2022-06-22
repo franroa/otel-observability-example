@@ -43,3 +43,7 @@ minikube delete --profile observability-demo
 * https://github.com/micrometer-metrics/micrometer
 * https://linuxczar.net/blog/2022/01/17/java-spring-boot-prometheus-exemplars/
 * https://github.com/open-telemetry/opentelemetry-java-instrumentation
+
+
+
+pack build franroa/otelworkingexample:latest  -e BP_JVM_VERSION=17

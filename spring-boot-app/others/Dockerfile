@@ -4,7 +4,7 @@ RUN curl --silent --fail -L "https://github.com/open-telemetry/opentelemetry-jav
     -o "$HOME/opentelemetry-javaagent.jar"
 
 FROM maven:eclipse-temurin AS build
-ADD . /build
+ADD .. /build
 RUN cd /build && mvn package --quiet
 
 FROM eclipse-temurin:17
