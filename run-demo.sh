@@ -16,7 +16,10 @@ set -euo pipefail
 #eval "$(minikube -p $MINIKUBE_PROFILE docker-env)"
 #(cd spring-boot-app; docker build -q -t "spring-boot-app:latest" .)
 
-kind create cluster
+
+
+
+#kind create cluster
 
 helm_install() {
   local chart_name=$1
@@ -35,7 +38,6 @@ helm_install() {
     && helm upgrade --namespace "$namespace" --install "$release_name" .)
 }
 
-./autoinstrumentation/init-tempo.sh
 
 helm_install kube-prometheus-stack
 helm_install tempo
