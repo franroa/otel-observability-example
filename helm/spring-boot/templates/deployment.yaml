@@ -23,7 +23,7 @@ spec:
       - name: fran
       containers:
         - name: {{ include "app.name" . }}
-          image: "franroa/otelworkingexample:latest"
+          image: "franroa/otelworkingexample:2"
 #           image: "franroa/otelwithpack:latest"
           imagePullPolicy: Always
           ports:

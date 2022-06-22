@@ -1,3 +1,4 @@
+# todo use the collector instead https://grafana.com/blog/2022/05/04/how-to-capture-spring-boot-metrics-with-the-opentelemetry-java-instrumentation-agent/
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
