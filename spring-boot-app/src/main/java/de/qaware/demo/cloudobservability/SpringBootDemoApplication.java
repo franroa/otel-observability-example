@@ -16,6 +16,7 @@ public class SpringBootDemoApplication {
         SpringApplication.run(SpringBootDemoApplication.class, args);
     }
 
+//  TODO this will not needed any longer after this release:  https://spring.io/blog/2022/05/19/spring-boot-3-0-0-m3-available-now
     @Bean
     @ConditionalOnClass(name = "io.opentelemetry.javaagent.OpenTelemetryAgent")
     public MeterRegistry otelRegistry() {
