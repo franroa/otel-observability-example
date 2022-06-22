@@ -38,8 +38,21 @@ helm_install() {
     && helm upgrade --namespace "$namespace" --install "$release_name" .)
 }
 
+setup_monitoring() {
+  local dashboard_path
+  for dashboard_path in dashboards/*.json; do
+      local name
+      name=$(basename "$dashboard_path")
+      name="dashboard-${name%.*}"
+      kubectl create configmap "$name" --namespace kube-prometheus-stack --from-file="$dashboard_path" \
+          --dry-run=client --output=yaml --save-config | kubectl apply --filename=-
+      kubectl label configmap "$name" --namespace=kube-prometheus-stack grafana_dashboard=1 --overwrite
+  done
+}
 
 helm_install kube-prometheus-stack
+setup_monitoring
+
 helm_install tempo
 helm_install promtail
 helm_install loki
