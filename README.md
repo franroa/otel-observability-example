@@ -45,5 +45,34 @@ minikube delete --profile observability-demo
 * https://github.com/open-telemetry/opentelemetry-java-instrumentation
 
 
+* https://grafana.com/blog/2022/05/10/how-to-collect-prometheus-metrics-with-the-opentelemetry-collector-and-grafana/
+* https://sysdig.com/blog/prometheus-remote-write-opentelemetry/
+* https://opentelemetry.io/docs/reference/specification/metrics/sdk_exporters/prometheus/#:~:text=A%20Prometheus%20Exporter%20is%20a,MUST%20NOT%20support%20Push%20mode.
+* https://opentelemetry.uptrace.dev/guide/opentelemetry-prometheus.html#sending-go-metrics-to-prometheus
+* https://grafana.com/blog/2022/04/26/set-up-and-observe-a-spring-boot-application-with-grafana-cloud-prometheus-and-opentelemetry/
+* https://github.com/adamquan/hello-observability/blob/main/hello-observability/load-generator.sh
+* https://aws.amazon.com/blogs/opensource/building-a-helm-chart-for-deploying-the-opentelemetry-operator/
+* https://medium.com/swlh/yacr-yet-another-ckad-resource-46c654de871
+* https://blog.qaware.de/posts/cloud-observability-grafana-spring-boot/
 
+
+MUST NEXT STEPS:
+* https://www.baeldung.com/micrometer
+* https://spring.io/blog/2022/05/19/spring-boot-3-0-0-m3-available-now
+* https://micrometer.io/docs/tracing
+* https://frontbackend.com/maven/artifact/org.apache.camel/camel-micrometer/3.0.0-M3
+* https://grafana.com/blog/2022/05/04/how-to-capture-spring-boot-metrics-with-the-opentelemetry-java-instrumentation-agent/
+
+
+
+# Creating the docker image
 pack build franroa/otelworkingexample:latest  -e BP_JVM_VERSION=17
+
+# Auto-instrument
+We are using a resource from the otel operator called "instrumentation" (https://github.com/open-telemetry/opentelemetry-operator#opentelemetry-auto-instrumentation-injection)
+This will add a volume to the pod and inject into the container the opentelemetry java agent.
+If you don't want to use the instrumentation resource, you can inject the agent manually: https://grafana.com/blog/2021/02/03/auto-instrumenting-a-java-spring-boot-application-for-traces-and-logs-using-opentelemetry-and-grafana-tempo/
+
+# Collector
+The auto-instrumentation will send signals with the OTLP protocol (opentelemetry protocol), this signals will be collected by the collector
+and then send to the Grafana platform in a way that Grafana can understand them
