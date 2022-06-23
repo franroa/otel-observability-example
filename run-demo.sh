@@ -19,7 +19,7 @@ set -euo pipefail
 
 
 
-#kind create cluster
+kind create cluster
 
 helm_install() {
   local chart_name=$1
@@ -57,8 +57,6 @@ helm_install tempo
 helm_install promtail
 helm_install loki
 
-helm_install spring-boot default spring-boot-demo-app1
-kubectl apply -f app-golang/manifests
 
 echo ">>>> Waiting max 5min for deployments to finish...(you may watch progress using k9s)"
 kubectl wait --for=condition=ready --timeout=5m pod -n kube-prometheus-stack -l app.kubernetes.io/name=grafana

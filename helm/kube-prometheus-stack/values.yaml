@@ -23,7 +23,7 @@ kube-prometheus-stack:
           derivedFields:
             - name: trace_id
               datasourceUid: tempo
-              matcherRegex: "trace_id=(\\w+)"
+              matcherRegex: (?:traceID|trace_id)=(\w+)
               url: '$${__value.raw}'
       - name: Prometheus
         type: prometheus
@@ -33,6 +33,8 @@ kube-prometheus-stack:
         # https://grafana.com/docs/grafana/latest/datasources/prometheus/#provision-the-prometheus-data-source
         jsonData:
           exemplarTraceIdDestinations:
+            - name: traceID
+              datasourceUid: tempo
             - name: trace_id
               datasourceUid: tempo
               # https://github.com/grafana-operator/grafana-operator/blob/master/api/integreatly/v1alpha1/grafanadatasource_types.go#L205
@@ -44,17 +46,27 @@ kube-prometheus-stack:
         url: http://tempo.tempo:3100
         # https://grafana.com/docs/grafana/latest/datasources/tempo/#provision-the-tempo-data-source
         jsonData:
+          nodeGraph:
+            enabled: true
           httpMethod: GET
           tracesToLogs:
             datasourceUid: 'loki'
             # they must be attached by the instrumentation
-            tags: [ 'pod', 'namespace' ]
-            # extend time span a little, to ensure catching all logs of that span
-            spanStartTimeShift: 1s
-            spandEndTimeShift: 1s
+            tags: [ 'app', 'instance', 'pod', 'namespace' ]
             lokiSearch: true
+            # extend time span a little, to ensure catching all logs of that span
+            spanStartTimeShift: 200s
+#             spanEndTimeShift: 1h
+            filterByTraceID: true
+#             filterBySpanID: true
           serviceMap:
             datasourceUid: 'prometheus'
+          search:
+            hide: false
+          nodeGraph:
+            enabled: true
+          lokiSearch:
+            datasourceUid: 'loki'
     # Make anon login be the Admin for demo purposes! NEVER USE IN PRODUCTION SYSTEMS!
     grafana.ini:
       auth:
