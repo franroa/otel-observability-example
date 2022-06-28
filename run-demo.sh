@@ -70,6 +70,15 @@ helm_install promtail
 helm_install loki
 helm_install eventrouter
 
+#helm upgrade -i --create-namespace kubecost kubecost/cost-analyzer --namespace kubecost --set kubecostToken="aGVsbUBrdWJlY29zdC5jb20=xm343yadf98"
+helm upgrade --install kubecost kubecost/cost-analyzer \
+    --namespace kubecost \
+    --set serviceMonitor.enabled=true \
+    --set global.prometheus.fqdn=kube-prometheus-stack-prometheus.kube-prometheus-stack \
+    --set global.prometheus.enabled=false
+#k port-forward svc/kubecost-cost-analyzer 9003
+#http://localhost:9003/metrics
+
 setup_test_loggers
 
 echo ">>>> Waiting max 5min for deployments to finish...(you may watch progress using k9s)"
