@@ -67,3 +67,39 @@ https://grafana.com/grafana/dashboards/5373
 https://grafana.com/grafana/dashboards/3662
 
 
+
+
+TO CHECK:
+https://grafana.com/go/webinar/logging-with-loki-essential-configuration-settings/?pg=docs-loki&plcmt=footer-resources-2
+
+https://grafana.com/go/webinar/managing-log-privacy-with-loki/?pg=webinar-logging-with-loki-essential-configuration-settings&plcmt=resources-list-3
+
+https://grafana.com/blog/2021/12/29/grafana-loki-2021-year-in-review/?pg=managing-log-privacy-with-loki&plcmt=related-content-3
+
+https://medium.com/empathyco/cloud-finops-part-4-kubernetes-cost-report-b4964be02dc3
+
+https://grafana.com/grafana/dashboards/13446
+
+https://grafana.com/grafana/dashboards/139
+
+https://johanneskonings.dev/aws/2020/11/27/aws_billing_metrics_and_grafana_cloud/
+
+https://grafana.com/orgs/kubecost
+
+https://grafana.com/grafana/dashboards/15714
+
+https://grafana.com/orgs/kubecost
+
+https://grafana.com/grafana/dashboards/11270
+
+https://github.com/dnavarrom/grafana-aws-cost-explorer-backend
+
+https://grafana.com/grafana/dashboards/13514
+
+https://blog.kubecost.com/blog/lens-kubecost-extension/
+
+https://www.taloflow.ai/blog/aws-cloud-cost-management
+
+https://guide.kubecost.com/hc/en-us/articles/4407601807383-Kubernetes-Cost-Allocation
+
+
