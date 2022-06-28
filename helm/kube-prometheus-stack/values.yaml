@@ -33,9 +33,9 @@ kube-prometheus-stack:
         # https://grafana.com/docs/grafana/latest/datasources/prometheus/#provision-the-prometheus-data-source
         jsonData:
           exemplarTraceIdDestinations:
-            - name: traceID
+            - name: traceID # golang example
               datasourceUid: tempo
-            - name: trace_id
+            - name: trace_id # spring example
               datasourceUid: tempo
               # https://github.com/grafana-operator/grafana-operator/blob/master/api/integreatly/v1alpha1/grafanadatasource_types.go#L205
               urlDisplayLabel: View in Tempo
@@ -75,3 +75,33 @@ kube-prometheus-stack:
         enabled: true
         org_name: "Main Org."
         org_role: Admin
+      feature_toggles:
+        enable: tempoSearch
+
+defaultRules:
+  create: true
+  rules:
+    etcd: false
+    kubeApiserver: false
+    kubeApiserverAvailability: false
+    kubeApiserverError: false
+    kubeApiserverSlos: false
+    kubelet: true
+    kubeScheduler: false
+    time: false
+    node: true
+    kubernetesSystem: false
+    general: true
+    alertmanager: true
+    k8s: true
+    kubePrometheusGeneral: true
+    kubePrometheusNodeAlerting: true
+    kubePrometheusNodeRecording: true
+    kubernetesAbsent: true
+    kubernetesApps: true
+    kubernetesResources: true
+    kubernetesStorage: true
+    kubeStateMetrics: true
+    network: true
+    prometheus: true
+    prometheusOperator: true

@@ -1,0 +1,74 @@
+serviceMonitor:
+  enabled: true
+
+initContainer:
+  enabled: true
+  fsInotifyMaxUserInstances: 1024
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 100%
+
+config:
+  snippets:
+    # https://grafana.com/blog/2020/10/28/loki-2.0-released-transform-logs-as-youre-querying-them-and-set-up-alerts-within-loki/
+    pipelineStages: # structured https://grafana.com/blog/2019/07/25/lokis-path-to-ga-adding-structure-to-unstructured-logs/
+      - cri: {}
+      - match:
+          # For event router logs we add a special label for the event namespace
+          selector: '{app="eventrouter"}'
+          stages:
+            - json:
+                expressions:
+                  event_namespace: event.metadata.namespace
+            - labels:
+                event_namespace:
+      - match:
+          selector: '{app="test-logger-json"}'
+          stages:
+            - json:
+                expressions:
+                  level: level
+            - labels:
+                level:
+      - match:
+          selector: '{app="test-logger-logfmt"}'
+          stages:
+            - regex:
+                expression: "level=(?P<level>\\S+)"
+            - labels:
+                level:
+
+#TODO configure syslogs with loki
+#todo define structured logging
+
+# the same service discovery as prometheus. You need to use the same labels
+scrape_configs:
+  - job_name: journal
+    journal:
+      json: false
+      max_age: 12h
+      path: /var/log/journal
+      labels:
+        job: systemd-journal
+    relabel_configs:
+      - source_labels:
+          - __journal__systemd_unit
+        target_label: systemd_unit
+      - source_labels:
+          - __journal__hostname
+        target_label: nodename
+      - source_labels:
+          - __journal_syslog_identifier
+        target_label: syslog_identifier
+  - job_name: syslog
+    syslog:
+      listen_address: 0.0.0.0:1514
+      idle_timeout: 60s
+      label_structured_data: yes
+      labels:
+        job: "syslog"
+    relabel_configs:
+      - source_labels: ['__syslog_message_hostname']
+        target_label: 'host'

@@ -1,0 +1,105 @@
+#  https://grafana.com/docs/loki/latest/fundamentals/architecture/
+fullnameOverride: loki
+nameOverride: loki
+
+loki:
+  serviceMonitor:
+     enabled: true
+  revisionHistoryLimit: 1
+
+serviceAccount:
+  enabled: true
+
+serviceMonitor:
+  enabled: true
+
+prometheusRule:
+  enabled: true
+  groups:
+    - name: loki-rules
+      rules:
+        - record: job:loki_request_duration_seconds_bucket:sum_rate
+          expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job)
+        - record: job_route:loki_request_duration_seconds_bucket:sum_rate
+          expr: sum(rate(loki_request_duration_seconds_bucket[1m])) by (le, job, route)
+
+gateway:
+  replicas: 2
+
+distributor:
+  replicas: 3
+
+ingester:
+  replicas: 3
+  extraEnvFrom:
+    - secretRef:
+        name: minio-credentials #todo this are admin credentials
+  persistence:
+    enabled: true
+
+querier:
+  replicas: 3
+  extraEnvFrom:
+    - secretRef:
+        name: minio-credentials #todo this are admin credentials
+  persistence:
+    enabled: true
+
+queryFrontend:
+  replicas: 2
+
+compactor:
+  enabled: true
+  extraEnvFrom:
+    - secretRef:
+        name: minio-credentials
+  persistence:
+    enabled: true
+
+tableManager:
+  enabled: true
+  extraEnvFrom:
+    - secretRef:
+        name: minio-credentials
+
+ruler:
+  enabled: true
+  replicas: 2
+  extraEnvFrom:
+    - secretRef:
+        name: minio-credentials
+  directories:
+    # fake is the default tenantID when working on single tenant mode
+    fake: # https://grafana.com/docs/loki/latest/operations/multi-tenancy/
+      rules.txt: |
+        groups:
+          - name: should_fire
+            rules:
+              - alert: HighPercentageError
+                expr: |
+                  sum(rate({app="loki"} |= "error" [5m])) by (job)
+                    /
+                  sum(rate({app="loki"}[5m])) by (job)
+                    > 0.05
+                for: 10m
+                labels:
+                  severity: warning
+                annotations:
+                  summary: High error percentage
+
+memcachedExporter:
+  enabled: true
+
+memcachedChunks:
+  enabled: true
+  replicas: 2
+
+memcachedFrontend:
+  enabled: true
+  replicas: 2
+
+memcachedIndexQueries:
+  enabled: true
+  replicas: 2
+
+#todo create folders for the dashboards

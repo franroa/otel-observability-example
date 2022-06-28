@@ -76,3 +76,24 @@ If you don't want to use the instrumentation resource, you can inject the agent 
 # Collector
 The auto-instrumentation will send signals with the OTLP protocol (opentelemetry protocol), this signals will be collected by the collector
 and then send to the Grafana platform in a way that Grafana can understand them
+
+
+
+Latency
+histogram_quantile(0.90, sum(rate(http_server_requests_seconds_bucket[5m])) by (le, verb))
+
+
+Errors
+sum(rate(http_server_requests_seconds_count{job="spring-boot-demo-app1", status=~"5.."}[5m]))   
+
+Error Budget
+1 - ((1 - (sum(increase(http_server_requests_seconds_count{job="spring-boot-demo-app1", status=~"2.."}[7d])) by (verb)) /  sum(increase(http_server_requests_seconds_count{job="spring-boot-demo-app1"}[7d])) by (verb)) / (1 - .80))
+
+
+
+Availability
+sum(rate(http_server_requests_seconds_count{status=~"2.."}[5m])) / sum(rate(http_server_requests_seconds_count[5m]))
+
+
+Throughput
+sum(rate(http_server_requests_seconds_count{status=~"2.."}[5m]))
