@@ -21,6 +21,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
+  "id": 46,
+  "iteration": 1656442317297,
   "links": [
     {
       "asDropdown": false,
@@ -388,7 +390,59 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "default"
+          ],
+          "value": [
+            "default"
+          ]
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(kube_namespace_labels, namespace)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "namespace",
+        "multi": true,
+        "name": "Namespace",
+        "options": [],
+        "query": {
+          "query": "label_values(kube_namespace_labels, namespace)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "spring-boot",
+          "value": "spring-boot"
+        },
+        "hide": 0,
+        "label": "app",
+        "name": "app",
+        "options": [
+          {
+            "selected": true,
+            "text": "spring-boot",
+            "value": "spring-boot"
+          }
+        ],
+        "query": "spring-boot",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
   },
   "time": {
     "from": "now-30m",
@@ -398,6 +452,6 @@
   "timezone": "",
   "title": "SLIsToCosts",
   "uid": "J_qibQ_nktocost",
-  "version": 1,
+  "version": 3,
   "weekStart": ""
 }
