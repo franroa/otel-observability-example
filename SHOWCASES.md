@@ -15,7 +15,11 @@ metrics generator
 - service graph metrics
 
 LogQL
-labels
+explain that works with labels
+search autocompletion
+kubernetes events
+json vs logfmt
+labels:
 - stick to topology
 - not dynamic labels
 - more is less!

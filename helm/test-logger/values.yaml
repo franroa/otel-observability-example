@@ -1,0 +1,29 @@
+image:
+  registry: docker.io
+  repository: ubuntu
+  pullPolicy: Always
+  tag: focal
+
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+
+podAnnotations: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+
+resources: {}
+
+logType: logfmt

@@ -50,13 +50,27 @@ setup_monitoring() {
   done
 }
 
+setup_test_loggers() {
+
+    helm upgrade test-logger-json helm/test-logger --install --wait \
+        --namespace=apps --create-namespace \
+        --values=config/test-logger/values-json.yaml
+
+    helm upgrade test-logger-logfmt helm/test-logger --install --wait \
+        --namespace=apps --create-namespace \
+        --values=config/test-logger/values-logfmt.yaml
+
+}
+
 helm_install kube-prometheus-stack
 setup_monitoring
 
 helm_install tempo
 helm_install promtail
 helm_install loki
+helm_install eventrouter
 
+setup_test_loggers
 
 echo ">>>> Waiting max 5min for deployments to finish...(you may watch progress using k9s)"
 kubectl wait --for=condition=ready --timeout=5m pod -n kube-prometheus-stack -l app.kubernetes.io/name=grafana
