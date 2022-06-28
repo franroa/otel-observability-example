@@ -1,3 +1,13 @@
+Find an error in Demo App and jump to the logs
+
+find a log
+find a trace
+
+
+show code
+show pack
+
+
 TraceQL
 - pipelines of spansets
 - aggregates
@@ -44,6 +54,9 @@ Structured Logs
 - Stages: mask the password: https://grafana.com/docs/loki/latest/clients/promtail/stages/replace/#without-source
 - https://grafana.com/docs/loki/latest/clients/aws/eks/
 
+SLIs
+Datalink to deep dive
+Data link to FinOps https://grafana.com/grafana/dashboards/139
 
 
 https://raw.githubusercontent.com/micrometer-metrics/micrometer/main/scripts/spring-dash/jvmgc-dashboard.json
