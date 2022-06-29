@@ -102,3 +102,6 @@ https://www.taloflow.ai/blog/aws-cloud-cost-management
 https://guide.kubecost.com/hc/en-us/articles/4407601807383-Kubernetes-Cost-Allocation
 
 
+
+
+https://sysdig.com/blog/golden-signals-kubernetes/

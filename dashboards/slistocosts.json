@@ -21,8 +21,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 46,
-  "iteration": 1656442317297,
+  "iteration": 1656489998889,
   "links": [
     {
       "asDropdown": false,
@@ -383,6 +382,22 @@
       ],
       "title": "Error Budget - Remaining Error Budget",
       "type": "stat"
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "id": 10,
+      "options": {
+        "content": "# Information\n\n## Error Budget explanation:\n\n***Remaining error budget in percentage*** = `1-[(1-compliance)/(1-objective)]`\n\n<br/>\n\n***% error occurred*** = `1 - compliance = 1 - successful requests/total requests`\n<br/>\n***% error used*** = `% error occurred/error budget`\n<br/>\n***% remaining error budget*** = `1- % error used`",
+        "mode": "markdown"
+      },
+      "pluginVersion": "8.4.2",
+      "title": "Information",
+      "type": "text"
     }
   ],
   "refresh": false,
@@ -450,8 +465,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "SLIs",
+  "title": "SLIs Spring Application",
   "uid": "J_qibQ_nktocost",
-  "version": 3,
+  "version": 1,
   "weekStart": ""
 }

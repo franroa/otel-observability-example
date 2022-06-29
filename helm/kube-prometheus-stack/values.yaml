@@ -52,7 +52,7 @@ kube-prometheus-stack:
           tracesToLogs:
             datasourceUid: 'loki'
             # they must be attached by the instrumentation
-            tags: [ 'app', 'instance', 'pod', 'namespace' ]
+            tags: [ 'app', 'instance', 'pod', 'namespace' ] # NOTE I put the four labels because I have two different projects which are using different labels
             lokiSearch: true
             # extend time span a little, to ensure catching all logs of that span
             spanStartTimeShift: 200s
