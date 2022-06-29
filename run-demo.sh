@@ -71,7 +71,7 @@ helm_install loki
 helm_install eventrouter
 
 #helm upgrade -i --create-namespace kubecost kubecost/cost-analyzer --namespace kubecost --set kubecostToken="aGVsbUBrdWJlY29zdC5jb20=xm343yadf98"
-helm upgrade --install kubecost kubecost/cost-analyzer \
+helm upgrade --install kubecost kubecost/cost-analyzer  --create-namespace \
     --namespace kubecost \
     --set serviceMonitor.enabled=true \
     --set global.prometheus.fqdn=kube-prometheus-stack-prometheus.kube-prometheus-stack \

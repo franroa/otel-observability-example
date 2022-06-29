@@ -1,34 +1,22 @@
-Find an error in Demo App and jump to the logs
-
-find a log
-find a trace
-
-
 show code
 show pack
 
-
-TraceQL
-- pipelines of spansets
-- aggregates
-- parquet
-Loki Search - Loki indexes shared with tempo - {job="default/app"}  |= "error"
-- {job="default/app"}  |= "error"
-- {job="default/app"}  |= "error" != "timeout"
-- {job="default/app"}  |~ `(?i)error`
-- {job="default/app"}  |= ip(1.2.3.4)
-Teampo Search
-git integration
-query builder
-metrics generator
-- span metrics - RED - trace to metrics
-- service graph metrics
+Find an error in Demo App and jump to the logs, also jump to the trace
+find a trace - 4e9837acc7818262
 
 LogQL
-explain that works with labels
+explain that works with labels (same service discovery as Prometheus. You should use the same labels for both)
 search autocompletion
-kubernetes events
-json vs logfmt
+kubernetes events - {job="eventrouter/eventrouter"}         {app="eventrouter"}
+json vs logfmt - SHOW THE CONTAINER LOGS: {job="apps/test-logger-logfmt"} - show the level=info
+structured data - Promtail (json loki parser)
+distributed grep
+AD-HOC metrics: sum(rate(({job="default/loadgen"})[1m]))
+- cuando no hay instrumentation
+- cuando no quieres guarda muchas metricas en base de datos que usas poco frecuentemente
+  Loki alerts
+
+
 labels:
 - stick to topology
 - not dynamic labels
@@ -36,17 +24,28 @@ labels:
 - too many labels index gets too big
 - too few, the data cant be sharded over enough ingesters
 - labels are also important for writes and queries (paralellism)
-- structured data
-- no schema
-json loki parser 
-distributed grep
-Loki alerts
-ad-hoc metrics: sum(rate(({job="default/loadgen"})[1m]))
-- cuando no hay instrumentation
-- cuando no quieres guarda muchas metricas en base de datos que usas poco frecuentemente
-  https://grafana.com/docs/loki/latest/logql/
+https://grafana.com/docs/loki/latest/logql/
 EKS Configuration
 NOTE: you jump to the span logs, not to the trace logs
+
+
+
+TraceQL
+Loki Search - Loki indexes shared with tempo - {job="default/app"}  |= "error"
+- {job="default/app"}  |= "error"
+- {job="default/app"}  |= "error" != "timeout"
+- {job="default/app"}  |~ `(?i)error`
+- {job="default/app"}  |= ip(1.2.3.4)
+ONGOING:
+- pipelines of spansets
+- aggregates
+- parquet
+Teampo Search
+git integration
+query builder
+metrics generator
+- span metrics - RED - trace to metrics
+- service graph metrics
 
 
 Promtail
