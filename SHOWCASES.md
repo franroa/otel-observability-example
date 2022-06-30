@@ -2,10 +2,11 @@ show code
 show pack
 
 Find an error in Demo App and jump to the logs, also jump to the trace
-find a trace - 4e9837acc7818262
+find a trace - 385c42b46f05009d
 
 LogQL
 explain that works with labels (same service discovery as Prometheus. You should use the same labels for both)
+show context on filtered logs
 search autocompletion
 kubernetes events - {job="eventrouter/eventrouter"}         {app="eventrouter"}
 json vs logfmt - SHOW THE CONTAINER LOGS: {job="apps/test-logger-logfmt"} - show the level=info
@@ -56,7 +57,14 @@ Structured Logs
 SLIs
 Datalink to deep dive
 Data link to FinOps https://grafana.com/grafana/dashboards/139
+RED Demo
 
+
+Problems that could be solved:
+- password masking
+- container resource monitoring
+- kube events
+- costs
 
 https://raw.githubusercontent.com/micrometer-metrics/micrometer/main/scripts/spring-dash/jvmgc-dashboard.json
 https://raw.githubusercontent.com/micrometer-metrics/micrometer/main/scripts/spring-dash/latency-dashboard.json
