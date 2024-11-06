@@ -17,14 +17,15 @@ kube-prometheus-stack:
         type: loki
         uid: loki
         access: proxy
-        url: http://loki.loki:3100
+        url: http://loki-gateway.loki.svc.cluster.local/
+        # url: http://loki-loki-distributed-gateway.loki
         # https://grafana.com/docs/grafana/latest/datasources/loki/#configure-the-data-source-with-provisioning
         jsonData:
           derivedFields:
             - name: trace_id
               datasourceUid: tempo
               matcherRegex: (?:traceID|trace_id)=(\w+)
-              url: '$${__value.raw}'
+              url: "$${__value.raw}"
       - name: Prometheus
         type: prometheus
         uid: prometheus
@@ -39,6 +40,12 @@ kube-prometheus-stack:
               datasourceUid: tempo
               # https://github.com/grafana-operator/grafana-operator/blob/master/api/integreatly/v1alpha1/grafanadatasource_types.go#L205
               urlDisplayLabel: View in Tempo
+      - name: Pyroscope
+        type: grafana-pyroscope-datasource
+        access: proxy
+        orgId: 1
+        uid: pyroscope
+        url: http://pyroscope.pyroscope:4040
       - name: Tempo
         type: tempo
         uid: tempo
@@ -46,35 +53,86 @@ kube-prometheus-stack:
         url: http://tempo.tempo:3100
         # https://grafana.com/docs/grafana/latest/datasources/tempo/#provision-the-tempo-data-source
         jsonData:
-          nodeGraph:
-            enabled: true
           httpMethod: GET
-          tracesToLogs:
-            datasourceUid: 'loki'
-            # they must be attached by the instrumentation
-            tags: [ 'app', 'instance', 'pod', 'namespace' ] # NOTE I put the four labels because I have two different projects which are using different labels
-            lokiSearch: true
-            # extend time span a little, to ensure catching all logs of that span
-            spanStartTimeShift: 200s
-#             spanEndTimeShift: 1h
-            filterByTraceID: true
-#             filterBySpanID: true
+          tracesToLogsV2:
+            tags:
+              [
+                { key: "app" },
+                { key: "namespace" },
+                { key: "pod" },
+                { key: "instance" },
+              ]
+            datasourceUid: "loki"
+            spanStartTimeShift: "-10m"
+            spanEndTimeShift: "10m"
+            # tags: ["app", "instance", "pod", "namespace"] # NOTE I put the four labels because I have two different projects which are using different labels
+            filterByTraceID: false
+            filterBySpanID: false
+            customQuery: true
+            query: "{$${__tags}} |= `$${__span.traceId}`"
+          # tracesToLogs:
+          #   datasourceUid: "loki"
+          #   # they must be attached by the instrumentation
+          #   tags: ["app", "instance", "pod", "namespace", "job"] # NOTE I put the four labels because I have two different projects which are using different labels
+          #   lokiSearch: true
+          #   # extend time span a little, to ensure catching all logs of that span
+          #   spanStartTimeShift: 200s
+          #   #             spanEndTimeShift: 1h
+          #   filterByTraceID: true
+          tracesToMetrics:
+            datasourceUid: "prometheus"
+            spanStartTimeShift: "1h"
+            spanEndTimeShift: "-1h"
+            tags:
+              [
+                { key: "service.name", value: "service" },
+                { key: "job" },
+                { key: "app" },
+                { key: "namespace" },
+                { key: "pod" },
+                { key: "instance" },
+              ]
+            queries:
+              - name: "Sample query"
+                query: "sum(rate(traces_spanmetrics_latency_bucket{$$__tags}[5m]))"
+          tracesToProfiles:
+            customQuery: false
+            query: 'method="$${__span.tags.method}"'
+            datasourceUid: "pyroscope"
+            # tags: ["job", "app", "instance", "pod", "namespace"]
+            profileTypeId: "process_cpu:cpu:nanoseconds:cpu:nanoseconds"
+            tags:
+              [
+                { key: "host.name", value: "hostname" },
+                { key: "job" },
+                { key: "app" },
+                { key: "namespace" },
+                { key: "pod" },
+                { key: "instance" },
+              ]
           serviceMap:
-            datasourceUid: 'prometheus'
+            datasourceUid: "prometheus"
           search:
             hide: false
           nodeGraph:
             enabled: true
+          traceQuery:
+            timeShiftEnabled: true
+            spanStartTimeShift: "1h"
+            spanEndTimeShift: "-1h"
+          spanBar:
+            type: "Tag"
+            tag: "http.path"
           lokiSearch:
-            datasourceUid: 'loki'
+            datasourceUid: "loki"
     # Make anon login be the Admin for demo purposes! NEVER USE IN PRODUCTION SYSTEMS!
     grafana.ini:
-      auth:
-        disable_login_form: true
-      auth.anonymous:
-        enabled: true
-        org_name: "Main Org."
-        org_role: Admin
+      # auth:
+      #   disable_login_form: true
+      # auth.anonymous:
+      #   enabled: true
+      #   org_name: "Main Org."
+      #   org_role: Admin
       feature_toggles:
         enable: tempoSearch
 

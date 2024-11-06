@@ -6,5 +6,6 @@ description: Chart to deploy kube-prometheus-stack
 dependencies:
   # https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/Chart.yaml
   - name: kube-prometheus-stack
-    version: 34.6.0
+    version: 62.4.0
     repository: https://prometheus-community.github.io/helm-charts
+

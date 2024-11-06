@@ -16,70 +16,77 @@ set -euo pipefail
 #eval "$(minikube -p $MINIKUBE_PROFILE docker-env)"
 #(cd spring-boot-app; docker build -q -t "spring-boot-app:latest" .)
 
-
-
-
-kind create cluster
+# kind delete cluster
+# kind create cluster --kubeconfig /root/.kube/kind-kind.yaml
+# kubie ctx kind-kind
 
 helm_install() {
   local chart_name=$1
   local namespace=$chart_name
   if [[ -n "${2:-}" ]]; then
-      namespace=$2
+    namespace=$2
   fi
   local release_name=$chart_name
   if [[ -n "${3:-}" ]]; then
-      release_name=$3
+    release_name=$3
   fi
   echo ">>>> Installing helm chart $chart_name into namespace $namespace as release $release_name"
   kubectl create namespace "$namespace" --dry-run=client -o yaml | kubectl apply -f -
-  (cd "helm/$chart_name"; \
-    helm dependency update >/dev/null \
-    && helm upgrade --namespace "$namespace" --install "$release_name" .)
+  (
+    cd "helm/$chart_name"
+    helm dependency update >/dev/null &&
+      helm upgrade --namespace "$namespace" --install "$release_name" .
+  )
 }
 
 setup_monitoring() {
   local dashboard_path
   for dashboard_path in dashboards/*.json; do
-      local name
-      name=$(basename "$dashboard_path")
-      name="dashboard-${name%.*}"
-      kubectl create configmap "$name" --namespace kube-prometheus-stack --from-file="$dashboard_path" \
-          --dry-run=client --output=yaml --save-config | kubectl apply --filename=-
-      kubectl label configmap "$name" --namespace=kube-prometheus-stack grafana_dashboard=1 --overwrite
+    local name
+    name=$(basename "$dashboard_path")
+    name="dashboard-${name%.*}"
+    kubectl create configmap "$name" --namespace kube-prometheus-stack --from-file="$dashboard_path" \
+      --dry-run=client --output=yaml --save-config | kubectl apply --filename=-
+    kubectl label configmap "$name" --namespace=kube-prometheus-stack grafana_dashboard=1 --overwrite
   done
 }
 
 setup_test_loggers() {
 
-    helm upgrade test-logger-json helm/test-logger --install --wait \
-        --namespace=apps --create-namespace \
-        --values=config/test-logger/values-json.yaml
+  helm upgrade test-logger-json helm/test-logger --install --wait \
+    --namespace=apps --create-namespace \
+    --values=config/test-logger/values-json.yaml
 
-    helm upgrade test-logger-logfmt helm/test-logger --install --wait \
-        --namespace=apps --create-namespace \
-        --values=config/test-logger/values-logfmt.yaml
+  helm upgrade test-logger-logfmt helm/test-logger --install --wait \
+    --namespace=apps --create-namespace \
+    --values=config/test-logger/values-logfmt.yaml
 
 }
 
-helm_install kube-prometheus-stack
-setup_monitoring
+# helm_install kube-prometheus-stack
+# setup_monitoring
+#
+# kubectl apply -f loki-data-pvc.yaml
 
-helm_install tempo
-helm_install promtail
+# helm_install tempo
+# helm_install promtail
+# helm_install pyroscope
 helm_install loki
-helm_install eventrouter
+# helm upgrade --install loki grafana/loki -n loki --set resources.requests.cpu=100m --set resources.requests.memory=256Mi --create-namespace -f helm/loki/loki.yaml
+# helm_install eventrouter
 
-#helm upgrade -i --create-namespace kubecost kubecost/cost-analyzer --namespace kubecost --set kubecostToken="aGVsbUBrdWJlY29zdC5jb20=xm343yadf98"
-helm upgrade --install kubecost kubecost/cost-analyzer  --create-namespace \
-    --namespace kubecost \
-    --set serviceMonitor.enabled=true \
-    --set global.prometheus.fqdn=kube-prometheus-stack-prometheus.kube-prometheus-stack \
-    --set global.prometheus.enabled=false
-#k port-forward svc/kubecost-cost-analyzer 9003
-#http://localhost:9003/metrics
+##helm upgrade -i --create-namespace kubecost kubecost/cost-analyzer --namespace kubecost --set kubecostToken="aGVsbUBrdWJlY29zdC5jb20=xm343yadf98"
+#helm upgrade --install kubecost kubecost/cost-analyzer --create-namespace \
+#  --namespace kubecost \
+#  --set serviceMonitor.enabled=true \
+#  --set global.prometheus.fqdn=kube-prometheus-stack-prometheus.kube-prometheus-stack \
+#  --set global.prometheus.enabled=false
+##k port-forward svc/kubecost-cost-analyzer 9003
+##http://localhost:9003/metrics
 
-setup_test_loggers
+# kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.3/cert-manager.yaml
+
+# setup_test_loggers
 
 echo ">>>> Waiting max 5min for deployments to finish...(you may watch progress using k9s)"
 kubectl wait --for=condition=ready --timeout=5m pod -n kube-prometheus-stack -l app.kubernetes.io/name=grafana

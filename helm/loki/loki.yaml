@@ -1,21 +1,10 @@
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/discussions/34233
 loki:
-  loki:
-    config: |
-      backend:
-        image: 
-          tag: 3.1.0
-    ports:
-       - 3100:3100
-    persistence:
-      enabled: true
-      storageClassName: "default"
-      accessModes:
-        - ReadWriteOnce
-      size: 50Gi
-    # auth_enabled: false
-    # useTestSchema: true
-    limits_config:
-      allow_structured_metadata: true
+  useTestSchema: true
+  auth_enabled: false
+  limits_config:
+    allow_structured_metadata: true
+  config: |
     auth_enabled: false
 
     limits_config:
@@ -25,6 +14,10 @@ loki:
       http_listen_port: 3100
       grpc_listen_port: 9096
 
+    storage:
+      filesystem:
+        chunks_directory: /tmp/loki/chunks
+        rules_directory: /tmp/loki/rules
     common:
       instance_addr: localhost
       path_prefix: /tmp/loki
@@ -53,3 +46,4 @@ loki:
           index:
             prefix: index_
             period: 24h
+

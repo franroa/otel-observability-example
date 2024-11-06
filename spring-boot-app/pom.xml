@@ -17,21 +17,12 @@
         <java.version>17</java.version>
     </properties>
 
-    <!-- Use repo providing Micrometer 1.9.0-SNAPSHOT -->
-    <repositories>
-        <repository>
-            <id>spring-io-snapshots</id>
-            <url>https://repo.spring.io/libs-snapshot</url>
-        </repository>
-    </repositories>
-
     <dependencyManagement>
-        <!-- Temporarily use Micrometer 1.9.0-SNAPSHOT with Exemplar Support -->
         <dependencies>
             <dependency>
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-bom</artifactId>
-                <version>1.9.0-SNAPSHOT</version>
+                <version>1.8.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -46,6 +37,7 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>1.8.2</version>
         </dependency>
 
         <dependency>

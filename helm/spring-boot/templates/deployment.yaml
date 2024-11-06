@@ -14,7 +14,8 @@ spec:
     metadata:
       annotations:
 #         sidecar.opentelemetry.io/inject: "true"
-        instrumentation.opentelemetry.io/inject-java: "true"
+        # instrumentation.opentelemetry.io/inject-java: "true"
+        instrumentation.opentelemetry.io/inject-java: "opentelemetry-operator-system/tempo-instrumentation"
       labels:
         app: spring-boot
         {{- include "app.labels" . | nindent 8 }}
@@ -22,10 +23,9 @@ spec:
       imagePullSecrets:
       - name: fran
       containers:
-        - name: {{ include "app.name" . }}
-          image: "franroa/otelpresentation:latest"
-#           image: "franroa/otelwithpack:latest"
-          imagePullPolicy: Always
+        - name: "{{ .Chart.Name }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag}}"
+          imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 8080
@@ -48,6 +48,8 @@ spec:
             periodSeconds: 5
             failureThreshold: 30
           env:
+            # - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            #   value: http://otel-tempo-collector.opentelemetry-operator-system:4317
             - name: SERVER_PORT
               value: '8080'
             - name: MANAGEMENT_SERVER_PORT

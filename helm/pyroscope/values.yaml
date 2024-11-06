@@ -1,0 +1,10 @@
+pyroscope:
+  # https://github.com/grafana/helm-charts/blob/main/charts/tempo/values.yaml
+  serviceMonitor:
+    enabled: true
+  tracing:
+    enabled: true
+    profiling_enabled: true
+
+  pyroscopedb:
+    max_block_duration: 5m

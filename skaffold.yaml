@@ -1,0 +1,29 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: otel-spring-boot-example
+build:
+  local:
+    push: false
+  artifacts:
+    - image: franroa/otelpresentation
+      context: spring-boot-app
+      docker:
+        dockerfile: others/Dockerfile
+manifests:
+  helm:
+    releases:
+      - name: otel-spring-boot-example
+        namespace: default
+        chartPath: helm/spring-boot
+        createNamespace: true
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_franroa_otelpresentation}}"
+          image.tag: "{{.IMAGE_TAG_franroa_otelpresentation}}@{{.IMAGE_DIGEST_franroa_otelpresentation}}"
+          # otel-spring-boot-example.image.tag: "{{.IMAGE_TAG}}"
+portForward:
+  - resourceType: deployment
+    resourceName: kube-prometheus-stack-grafana
+    namespace: kube-prometheus-stack
+    port: 3000
+    localPort: 3000
