@@ -9,63 +9,62 @@
 #         - docker: {}
 #     lokiAddress: http://loki.loki:3100/loki/api/v1/push
 promtail:
-    serviceMonitor:
-      enabled: true
+  serviceMonitor:
+    enabled: true
 
-    initContainer:
-      enabled: true
-      fsInotifyMaxUserInstances: 1024
+  initContainer:
+    enabled: true
+    fsInotifyMaxUserInstances: 1024
 
-    updateStrategy:
-      type: RollingUpdate
-      rollingUpdate:
-        maxUnavailable: 100%
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 100%
 
-    config:
-      lokiAddress: http://loki.loki:3100/loki/api/v1/push
-      snippets:
-        # https://grafana.com/blog/2020/10/28/loki-2.0-released-transform-logs-as-youre-querying-them-and-set-up-alerts-within-loki/
-        pipelineStages: # structured https://grafana.com/blog/2019/07/25/lokis-path-to-ga-adding-structure-to-unstructured-logs/
-          - cri: {}
-          - replace:
-              expression: "password (\\S+)"
-              replace: "****"
-          - match:
-              # JSON parser
-              # For event router logs we add a special label for the event namespace
-              selector: '{app="eventrouter"}'
-              stages:
-                - json:
-                    expressions:
-                      event_namespace: event.metadata.namespace
-                - labels:
-                    event_namespace:
-          - match:
-                selector: '{app="test-logger-json"}'
-                stages:
-                  - json:
-                      expressions:
-                        level: level
-                  - labels:
-                      level:
-          - match:
-                selector: '{app="test-logger-logfmt"}'
-                stages:
-                  - regex:
-                      expression: "level=(?P<level>\\S+)"
-                  - labels:
-                      level:
-          - match:
-              selector: '{job="default/spring-boot-demo-app1"}'
-              stages:
-                - regex:
-                    expression: "(?:s|INFO)"
-                - static_labels:
-                    level: "INFO"
+  config:
+    lokiAddress: http://loki-loki-distributed-gateway.loki/loki/api/v1/push
+    snippets:
+      # https://grafana.com/blog/2020/10/28/loki-2.0-released-transform-logs-as-youre-querying-them-and-set-up-alerts-within-loki/
+      pipelineStages: # structured https://grafana.com/blog/2019/07/25/lokis-path-to-ga-adding-structure-to-unstructured-logs/
+        - cri: {}
+        - replace:
+            expression: "password (\\S+)"
+            replace: "****"
+        - match:
+            # JSON parser
+            # For event router logs we add a special label for the event namespace
+            selector: '{app="eventrouter"}'
+            stages:
+              - json:
+                  expressions:
+                    event_namespace: event.metadata.namespace
+              - labels:
+                  event_namespace:
+        - match:
+            selector: '{app="test-logger-json"}'
+            stages:
+              - json:
+                  expressions:
+                    level: level
+              - labels:
+                  level:
+        - match:
+            selector: '{app="test-logger-logfmt"}'
+            stages:
+              - regex:
+                  expression: "level=(?P<level>\\S+)"
+              - labels:
+                  level:
+        - match:
+            selector: '{job="default/spring-boot-demo-app1"}'
+            stages:
+              - regex:
+                  expression: "(?:s|INFO)"
+              - static_labels:
+                  level: "INFO"
 
-    #TODO configure syslogs with loki EKS: https://grafana.com/docs/loki/latest/clients/aws/eks/
-    #todo define structured logging
-
+  #TODO configure syslogs with loki EKS: https://grafana.com/docs/loki/latest/clients/aws/eks/
+  #todo define structured logging
 #     # the same service discovery as prometheus. You need to use the same labels
 #     scrape_configs:
 #       - job_name: journal

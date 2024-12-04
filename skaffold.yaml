@@ -27,3 +27,8 @@ portForward:
     namespace: kube-prometheus-stack
     port: 3000
     localPort: 3000
+  - resourceType: deployment
+    resourceName: otel-spring-boot-example
+    namespace: default
+    port: 8080
+    localPort: 8080

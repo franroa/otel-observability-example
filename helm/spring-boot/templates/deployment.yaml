@@ -13,9 +13,15 @@ spec:
   template:
     metadata:
       annotations:
+         profiles.grafana.com/memory.scrape: "true"
+         profiles.grafana.com/memory.port: "8080"
+         profiles.grafana.com/cpu.scrape: "true"
+         profiles.grafana.com/cpu.port: "8080"
+         profiles.grafana.com/goroutine.scrape: "true"
+         profiles.grafana.com/goroutine.port: "8080"
 #         sidecar.opentelemetry.io/inject: "true"
         # instrumentation.opentelemetry.io/inject-java: "true"
-        instrumentation.opentelemetry.io/inject-java: "opentelemetry-operator-system/tempo-instrumentation"
+         instrumentation.opentelemetry.io/inject-java: "opentelemetry-operator-system/tempo-instrumentation"
       labels:
         app: spring-boot
         {{- include "app.labels" . | nindent 8 }}

@@ -14,8 +14,7 @@ spec:
       batch:
 
     exporters:
-      logging:
-        loglevel: debug
+      debug:
 
       prometheusremotewrite:
         endpoint: prometheus:9090 # Prometheus remote write endpoint
@@ -43,11 +42,11 @@ spec:
         traces:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlp/tempo, logging]
+          exporters: [otlp/tempo, debug]
         # metrics:
         #   receivers: [otlp]
         #   processors: [batch]
-        #   exporters: [otlp, logging]
+        #   exporters: [otlp, debug]
         metrics:
           receivers: [otlp]
           processors: [batch]

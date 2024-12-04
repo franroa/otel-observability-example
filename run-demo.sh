@@ -63,14 +63,15 @@ setup_test_loggers() {
 
 }
 
-# helm_install kube-prometheus-stack
-# setup_monitoring
+helm_install kube-prometheus-stack
+setup_monitoring
 #
 # kubectl apply -f loki-data-pvc.yaml
 
-# helm_install tempo
-# helm_install promtail
-# helm_install pyroscope
+helm_install tempo
+helm_install promtail
+# https://grafana.com/docs/grafana/latest/setup-grafana/installation/kubernetes/
+helm_install pyroscope
 helm_install loki
 # helm upgrade --install loki grafana/loki -n loki --set resources.requests.cpu=100m --set resources.requests.memory=256Mi --create-namespace -f helm/loki/loki.yaml
 # helm_install eventrouter
@@ -84,9 +85,11 @@ helm_install loki
 ##k port-forward svc/kubecost-cost-analyzer 9003
 ##http://localhost:9003/metrics
 
-# kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.3/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.3/cert-manager.yaml
+kubectl wait --for=condition=ready --timeout=5m pod -n cert-manager -l app.kubernetes.io/instance
+kubectl apply -f https://github.com/open-telemetry/opentelemetry-operator/releases/latest/download/opentelemetry-operator.yaml
 
-# setup_test_loggers
+setup_test_loggers
 
 echo ">>>> Waiting max 5min for deployments to finish...(you may watch progress using k9s)"
 kubectl wait --for=condition=ready --timeout=5m pod -n kube-prometheus-stack -l app.kubernetes.io/name=grafana

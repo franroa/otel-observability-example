@@ -7,18 +7,30 @@ kube-prometheus-stack:
       enableFeatures:
         - exemplar-storage
   grafana:
+    env:
+      # Pyroscope env vars
+      GF_INSTALL_PLUGINS: grafana-pyroscope-app
+      # GF_AUTH_ANONYMOUS_ENABLED: "true"
+      # GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_DIAGNOSTICS_PROFILING_ENABLED: "true"
+      GF_DIAGNOSTICS_PROFILING_ADDR: 0.0.0.0
+      GF_DIAGNOSTICS_PROFILING_PORT: 6060
     sidecar:
       dashboards:
         searchNamespace: ALL
     additionalDataSources:
+      - name: Pyroscope-Test
+        type: pyroscope
+        uid: pyroscope-test
+        url: http://pyroscope-querier.pyroscope-test.svc.cluster.local.:4040/
       # this follows https://github.com/grafana/tns/blob/main/production/docker-compose/datasources.yaml
       # see also the additional links to Grafana docs specific for data sources
       - name: Loki
         type: loki
         uid: loki
         access: proxy
-        url: http://loki-gateway.loki.svc.cluster.local/
-        # url: http://loki-loki-distributed-gateway.loki
+        # url: http://loki-gateway.loki.svc.cluster.local/
+        url: http://loki-loki-distributed-gateway.loki
         # https://grafana.com/docs/grafana/latest/datasources/loki/#configure-the-data-source-with-provisioning
         jsonData:
           derivedFields:
@@ -85,7 +97,7 @@ kube-prometheus-stack:
             spanEndTimeShift: "-1h"
             tags:
               [
-                { key: "service.name", value: "service" },
+                { key: "service.name", value: "service_name" },
                 { key: "job" },
                 { key: "app" },
                 { key: "namespace" },
@@ -104,6 +116,7 @@ kube-prometheus-stack:
             tags:
               [
                 { key: "host.name", value: "hostname" },
+                { key: "service.name", value: "service_name" },
                 { key: "job" },
                 { key: "app" },
                 { key: "namespace" },
@@ -127,12 +140,12 @@ kube-prometheus-stack:
             datasourceUid: "loki"
     # Make anon login be the Admin for demo purposes! NEVER USE IN PRODUCTION SYSTEMS!
     grafana.ini:
-      # auth:
-      #   disable_login_form: true
-      # auth.anonymous:
-      #   enabled: true
-      #   org_name: "Main Org."
-      #   org_role: Admin
+      auth:
+        disable_login_form: true
+      auth.anonymous:
+        enabled: true
+        org_name: "Main Org."
+        org_role: Admin
       feature_toggles:
         enable: tempoSearch
 

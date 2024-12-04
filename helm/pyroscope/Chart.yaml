@@ -1,10 +1,10 @@
 apiVersion: v2
-name: tempo
+name: pyroscope
 version: 1.0.0-SNAPSHOT
 description: Chart to deploy grafana pyroscope
 
 dependencies:
   # https://github.com/grafana/helm-charts/blob/main/charts/tempo/Chart.yaml
   - name: pyroscope
-    version: 1.7.1
+    version: 1.9.1
     repository: https://grafana.github.io/helm-charts

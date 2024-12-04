@@ -20,6 +20,6 @@ helm_install() {
   )
 }
 
-kubectl delete -n apps -f app-golang/manifests
+# kubectl delete -n apps -f app-golang/manifests
 # helm_install spring-boot default spring-boot-demo-app1
 kubectl apply -n apps -f app-golang/manifests

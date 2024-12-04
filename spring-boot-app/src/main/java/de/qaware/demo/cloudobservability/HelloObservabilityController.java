@@ -29,7 +29,7 @@ public class HelloObservabilityController {
     randomError(path);
     Request request = new Request.Builder().url("http://localhost:8080/observability").build();
     try (Response response = client.newCall(request).execute()) {
-      return "Hello three, " + response.body().string() + "!\n";
+      return "Hello two, " + response.body().string() + "!\n";
     }
   }
 
