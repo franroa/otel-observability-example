@@ -34,7 +34,7 @@ ENV OTEL_PYROSCOPE_START_PROFILING=true
 # ENV PYROSCOPE_LOG_LEVEL=debug
 
 ## Those environment variables need to be overwritten at runtime, if you are using Grafana Cloud
-ENV PYROSCOPE_SERVER_ADDRESS=http://localhost:4040
+ENV PYROSCOPE_SERVER_ADDRESS=http://pyroscope.pyroscope:4040
 # ENV PYROSCOPE_BASIC_AUTH_USER=123     ## Grafana Cloud Username
 # ENV PYROSCOPE_BASIC_AUTH_PASSWORD=glc_secret ## Grafana Cloud Password / API Token
 
